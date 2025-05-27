@@ -1,0 +1,34 @@
+name: "dna_pairs_kmer" # Descriptive name for this data config
+
+# Paths to your data files
+# IMPORTANT: Replace with actual paths to your CSV files
+train_csv_path: "your_data_files/train_pairs.csv"
+val_csv_path: "your_data_files/validation_pairs.csv"
+# test_csv_path: "your_data_files/test_pairs.csv" # For later evaluation
+
+# Tokenizer settings
+# These will be passed to KmerTokenizer
+kmer_k: 3
+kmer_stride: 1
+# Path to where the vocabulary file will be saved/loaded from
+# The training script can be made to create this if it doesn't exist.
+vocab_file: "data_resources/kmer_vocab_k${data.kmer_k}.json"
+min_kmer_freq_for_vocab: 1 # Minimum frequency for a k-mer to be included in vocab
+
+# DataLoader settings
+batch_size: 16 # ContrastiveLoss can be sensitive to batch size
+num_workers: 2 # Adjust based on your system (0 for Windows often, 2-4 for Linux)
+shuffle_train_data: True
+
+# Max sequence length for tokenization (should ideally match model's block_size)
+# This can be set dynamically in the script or be a fixed value.
+# If not set here, the training script will use model.config.block_size.
+# max_seq_length: ${model.config.block_size} # Example of referencing another config value
+
+# (Optional) Data augmentation settings - can be a sub-config group
+# augmentation:
+#   apply: False
+#   type: "ids_noise"
+#   insertion_rate: 0.01
+#   deletion_rate: 0.01
+#   substitution_rate: 0.01

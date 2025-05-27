@@ -1,0 +1,19 @@
+# conf/model/dna_encoder_base.yaml
+# Base configuration for the DNASequenceEncoder.
+name: "dna_encoder_base" # For logging/identification
+
+# _target_ points to the class to be instantiated by Hydra
+_target_: model_pkg.dna_encoder.DNASequenceEncoder
+
+# The 'config' argument of DNASequenceEncoder expects a DNAEncoderConfig object.
+# Hydra will instantiate this DNAEncoderConfig object using the parameters below.
+config:
+  _target_: model_pkg.config.DNAEncoderConfig # Path to your config dataclass
+  block_size: 256
+  vocab_size: 512   # Placeholder - will be updated by actual tokenizer vocab size in train script
+  n_layer: 6
+  n_head: 6
+  n_embd: 384
+  dropout: 0.1
+  bias: True
+  pooling_strategy: "cls" # 'cls' or 'mean'

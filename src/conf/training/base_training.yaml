@@ -1,0 +1,43 @@
+# conf/training/base_contrastive.yaml
+name: "contrastive_training_base"
+
+num_epochs: 10
+learning_rate: 1e-4 # Starting learning rate
+
+optimizer:
+  _target_: torch.optim.AdamW # Using Hydra's instantiate for optimizer
+  lr: ${training.learning_rate} # Reference own group's learning_rate
+  weight_decay: 0.01
+  # betas: [0.9, 0.999] # AdamW defaults
+  # eps: 1e-8          # AdamW defaults
+
+loss_function:
+  _target_: training_pkg.losses.ContrastiveLoss # Path to your ContrastiveLoss class
+  margin: 0.5 # Margin for ContrastiveLoss
+
+# Learning rate scheduler (optional)
+scheduler: null # Example: "StepLR", "CosineAnnealingLR", or null to disable
+# scheduler_params:
+#   _target_: torch.optim.lr_scheduler.StepLR
+#   step_size: 5
+#   gamma: 0.1
+
+# Checkpointing
+checkpoint_dir_leafname: "checkpoints" # Subdirectory within Hydra's output for checkpoints
+save_every_n_epochs: 1
+save_best_on_metric: "val_loss" # Metric to monitor for saving the best model (e.g., 'val_loss', 'val_spearman_corr')
+
+# Device selection
+device: "cuda" # Options: "cuda", "cpu", "mps" (for Apple Silicon if PyTorch supports it well)
+
+# Logging
+log_every_n_steps: 10 # Log training batch loss every N steps
+validation_every_n_epochs: 1 # Perform validation every N epochs
+
+wandb: # Weights & Biases logging configuration
+  use: True # Set to false to disable wandb
+  project: ${project_name}   # References project_name from the main config.yaml
+  entity: "your_wandb_username_or_team" # <<< IMPORTANT: REPLACE with your W&B username or team
+  run_name: "${model.name}-${data.name}-${now:%Y%m%d_%H%M%S}" # Dynamic run name
+  log_config: True # Log the full Hydra config to W&B
+  # tags: ["dna-clustering", "contrastive", "${model.name}"] # Example tags

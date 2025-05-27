@@ -1,0 +1,12 @@
+# conf/model/dna_encoder_small.yaml
+defaults:
+  - dna_encoder_base # Inherit from the base configuration
+
+name: "dna_encoder_small"
+
+# Override parameters for a "small" version
+config:
+  n_layer: 4
+  n_head: 4
+  n_embd: 256
+  block_size: 128 # Smaller context window for a smaller model

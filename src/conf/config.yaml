@@ -1,0 +1,25 @@
+# conf/config.yaml
+defaults:
+  - _self_
+  - model: dna_encoder_small # Default model configuration
+  - data: dna_clustering_data_kmer # Default data configuration
+  - training: base_training # Default training configuration
+
+# General project settings
+project_name: "Clustering"
+output_dir_base: "outputs" # Base for Hydra's output, Hydra will append date/time
+seed: 1337
+notes: "Initial run for DNA sequence clustering with custom encoder."
+
+mode: "train" # 'train', 'evaluate_embeddings', 'cluster'
+
+hydra:
+  run:
+    dir: ${output_dir_base}/${project_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}_${hydra.job.override_dirname}
+  sweep:
+    dir: multirun/${project_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  job:
+    override_dirname:
+      item_sep: "_"
+      kv_sep: "="
